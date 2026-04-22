@@ -1,13 +1,13 @@
 import { useState } from "react";
-import TokenGeneration from "./components/TokenGeneration.jsx";
-import CallActivity from "./components/CallActivity.jsx";
-import CompensationActivity from "./components/CompensationActivity.jsx";
-import EventBasedGateway from "./components/EventBasedGateway.jsx";
+import TokenGeneration from "./components/TokenGeneration.tsx";
+import CallActivity from "./components/CallActivity.tsx";
+import CompensationActivity from "./components/CompensationActivity.tsx";
+import EventBasedGateway from "./components/EventBasedGateway.tsx";
 
 export default function App() {
-  const [selected, setSelected] = useState("token");
+  const [selected, setSelected] = useState<string>("token");
 
-  const btn = (active) => ({
+  const btn = (active: boolean): React.CSSProperties => ({
     background: active ? "#1a3a5a" : "#0d1f33",
     border: `1px solid ${active ? "#60c8ff" : "#2a5a8a"}`,
     color: active ? "#e8f4ff" : "#7aacd0",
