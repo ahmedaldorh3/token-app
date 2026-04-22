@@ -124,7 +124,7 @@ function Token({ x, y, color = "#FFD700" }) {
 export default function CallActivity() {
   const [step, setStep] = useState(0);
   const [auto, setAuto] = useState(false);
-  const timerRef = useRef(null);
+  const timerRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (auto) {
@@ -135,7 +135,7 @@ export default function CallActivity() {
         });
       }, 2200);
     }
-    return () => clearInterval(timerRef.current);
+    return () => clearInterval(timerRef.current ?? undefined);
   }, [auto]);
 
   const cur = steps[step];

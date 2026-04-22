@@ -330,7 +330,7 @@ export default function CompensationActivity() {
   const [stepIdx, setStepIdx] = useState(-1);
   const [auto, setAuto] = useState(false);
   const [done, setDone] = useState(false);
-  const timerRef = useRef(null);
+  const timerRef = useRef<number | null>(null);
   const scenario = SCENARIOS[scenarioIdx];
 
   useEffect(() => {
@@ -343,13 +343,13 @@ export default function CompensationActivity() {
         });
       }, 1800);
     }
-    return () => clearInterval(timerRef.current);
+    return () => clearInterval(timerRef.current ?? undefined);
   }, [auto, scenario]);
 
   const reset = () => { setStepIdx(-1); setAuto(false); setDone(false); };
   const switchScenario = (i) => { setScenarioIdx(i); reset(); };
 
-  const getState = (step, idx) => {
+  const getState = (step) => {
     if (stepIdx < 0) return "idle";
     const cur = scenario.steps[stepIdx];
 
@@ -451,7 +451,7 @@ export default function CompensationActivity() {
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 20 }}>
           {forwardSteps.map((step, i) => {
-            const state = getState(step, i);
+            const state = getState(step);
             const isCurrentStep = stepIdx >= 0 && scenario.steps[stepIdx]?.id === step.id;
             const forwardIdx = scenario.steps.findIndex(s => s.id === step.id);
             const nextForwardIdx = i < forwardSteps.length - 1 ? scenario.steps.findIndex(s => s.id === forwardSteps[i + 1].id) : -1;
@@ -470,7 +470,7 @@ export default function CompensationActivity() {
                   )}
                 </div>
                 {i < forwardSteps.length - 1 && (
-                  <Arrow active={arrowActive} red={step.fails && stepIdx > forwardIdx} />
+                  <Arrow active={arrowActive} red={step.fails && stepIdx > forwardIdx} orange={false} />
                 )}
               </div>
             );
@@ -479,7 +479,7 @@ export default function CompensationActivity() {
           {/* Throw event off the failure */}
           {throwStep && (
             <>
-              <Arrow red={throwFired} active={false} />
+              <Arrow red={throwFired} active={false} orange={false} />
               <div style={{ position: "relative" }}>
                 <StepNode step={throwStep} state={getState(throwStep)} scenarioColor={scenario.color} />
                 {scenario.steps[stepIdx]?.id === "throw" && (
@@ -536,7 +536,7 @@ export default function CompensationActivity() {
               })}
               {endStep && (
                 <>
-                  <Arrow orange={done} active={false} />
+                  <Arrow orange={done} active={false} red={false} />
                   <div style={{ position: "relative" }}>
                     <StepNode step={endStep} state={done ? "done" : "idle"} scenarioColor={scenario.color} />
                     {done && scenario.steps[stepIdx]?.id === "end" && (

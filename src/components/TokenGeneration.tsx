@@ -95,7 +95,7 @@ function TokenMarble({ pos }) {
 export default function TokenGeneration() {
   const [step, setStep] = useState(0);
   const [auto, setAuto] = useState(false);
-  const timerRef = useRef(null);
+  const timerRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (auto) {
@@ -106,7 +106,7 @@ export default function TokenGeneration() {
         });
       }, 2000);
     }
-    return () => clearInterval(timerRef.current);
+    return () => clearInterval(timerRef.current ?? undefined);
   }, [auto]);
 
   const current = steps[step];

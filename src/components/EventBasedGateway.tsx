@@ -244,14 +244,13 @@ function PathRow({ path, state, scenarioColor }) {
 export default function EventBasedGateway() {
   const [scenarioIdx, setScenarioIdx] = useState(0);
   const [phase, setPhase] = useState("idle"); // idle | setup | waiting | fired | done
-  const [firedPath, setFiredPath] = useState(null);
+  const [firedPath, setFiredPath] = useState<string | null>(null);
   const [auto, setAuto] = useState(false);
-  const timerRef = useRef(null);
+  const timerRef = useRef<number | null>(null);
   const scenario = SCENARIOS[scenarioIdx];
 
   useEffect(() => {
     if (auto) {
-      const sequence = ["setup", "waiting", null]; // null = pick random path
       let i = 0;
       timerRef.current = setInterval(() => {
         if (i === 0) { setPhase("setup"); i++; }
@@ -261,14 +260,14 @@ export default function EventBasedGateway() {
           setFiredPath(scenario.paths[idx].id);
           setPhase("fired");
           setAuto(false);
-          clearInterval(timerRef.current);
+          clearInterval(timerRef.current ?? undefined);
         }
       }, 1600);
     }
-    return () => clearInterval(timerRef.current);
+    return () => clearInterval(timerRef.current ?? undefined);
   }, [auto, scenario]);
 
-  const reset = () => { setPhase("idle"); setFiredPath(null); setAuto(false); clearInterval(timerRef.current); };
+  const reset = () => { setPhase("idle"); setFiredPath(null); setAuto(false); clearInterval(timerRef.current ?? undefined); };
   const switchScenario = (i) => { setScenarioIdx(i); reset(); };
 
   const fireRandom = () => {
